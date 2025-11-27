@@ -1,0 +1,9 @@
+{
+  "is-main": false,
+  "import": [
+    {
+      "path" : "Kaida-Amethyst/MoonLLVM/IR",
+      "alias" : "llvm"
+    }
+  ]
+}

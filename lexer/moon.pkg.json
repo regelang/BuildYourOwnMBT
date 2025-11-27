@@ -1,3 +1,4 @@
 {
-  "warn-list" : "-28"
+  "warn-list" : "-28",
+  "import": []
 }

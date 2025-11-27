@@ -1,6 +1,6 @@
 {
   "import": [
-    "moonbitlang/MiniMoonbit/lexer",
+    "moonbitlang/MiniMoonbit/lexer"
   ],
   "warn-list" : "-28"
 }

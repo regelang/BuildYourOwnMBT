@@ -1,0 +1,15 @@
+{
+  "is-main": true,
+  "import": [
+    "moonbitlang/MiniMoonbit/error",
+    "moonbitlang/MiniMoonbit/lexer",
+    "moonbitlang/MiniMoonbit/parser",
+    "moonbitlang/MiniMoonbit/typecheck",
+    "moonbitlang/MiniMoonbit/knf",
+    "moonbitlang/MiniMoonbit/codegen",
+    "Kaida-Amethyst/MoonLLVM/IR",
+    "moonbitlang/x/fs",
+    "moonbitlang/x/sys",
+    "Yoorkin/ArgParser"
+  ]
+}

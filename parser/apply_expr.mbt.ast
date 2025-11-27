@@ -1,0 +1,681 @@
+((Ptop_typedef
+  ((tycon ApplyExpr) (params ())
+   (components
+    (Ptd_record
+     (((field_name ((label kind)))
+       (field_ty (Ptype_name ((lid ApplyExprKind)) ())) (field_mut false)))))
+   (type_vis (Vis_pub (all)))
+   (deriving_
+    (((type_name_ ((name Show))) (args ()))
+     ((type_name_ ((name Eq))) (args ()))))))
+ (Ptop_typedef
+  ((tycon ApplyExprKind) (params ())
+   (components
+    (Ptd_variant
+     (((constr_name ((name AtomExpr)))
+       (constr_args (((Ptype_name ((lid AtomExpr)) ())))))
+      ((constr_name ((name ArrayAccess)))
+       (constr_args
+        (((Ptype_name ((lid ApplyExpr)) ()) (Ptype_name ((lid Expr)) ())))))
+      ((constr_name ((name FieldAccess)))
+       (constr_args
+        (((Ptype_name ((lid ApplyExpr)) ()) (Ptype_name ((lid String)) ())))))
+      ((constr_name ((name EnumVariantAccess)))
+       (constr_args
+        (((Ptype_name ((lid ApplyExpr)) ()) (Ptype_name ((lid String)) ())))))
+      ((constr_name ((name Call)))
+       (constr_args
+        (((Ptype_name ((lid ApplyExpr)) ())
+          (Ptype_name ((lid Array)) ((Ptype_name ((lid Expr)) ()))))))))))
+   (type_vis (Vis_pub (all)))
+   (deriving_
+    (((type_name_ ((name Show))) (args ()))
+     ((type_name_ ((name Eq))) (args ()))))))
+ (Ptop_funcdef
+  ((name ((binder_name parse_apply_expr)))
+   (decl_params
+    (((((binder_name tokens))
+       ((Ptype_name ((lid ArrayView)) ((Ptype_name ((lid Token)) ()))))))))
+   (quantifiers ())
+   (return_type
+    ((Ptype_tuple
+      ((Ptype_name ((lid ApplyExpr)) ())
+       (Ptype_name ((lid ArrayView)) ((Ptype_name ((lid Token)) ())))))))
+   (error_type (Error_typ (Ptype_name ((lid ParseError)) ())))
+   (vis (Vis_pub ())))
+  (Decl_body
+   (Pexpr_apply (Pexpr_ident ((var_name parse_apply_expr_with_depth)))
+    ((Pexpr_ident ((var_name tokens))) (Pexpr_constant 0)))))
+ (Ptop_funcdef
+  ((name ((binder_name parse_apply_expr_with_depth)))
+   (decl_params
+    (((((binder_name tokens))
+       ((Ptype_name ((lid ArrayView)) ((Ptype_name ((lid Token)) ())))))
+      (((binder_name depth)) ((Ptype_name ((lid Int)) ()))))))
+   (quantifiers ())
+   (return_type
+    ((Ptype_tuple
+      ((Ptype_name ((lid ApplyExpr)) ())
+       (Ptype_name ((lid ArrayView)) ((Ptype_name ((lid Token)) ())))))))
+   (error_type (Error_typ (Ptype_name ((lid ParseError)) ())))
+   (vis (Vis_pub ()))
+   (doc_
+    ((comment (" Parse an apply expression with recursion depth tracking"))
+     (loc 7:1-7:60))))
+  (Decl_body
+   (Pexpr_let
+    (Ppat_tuple
+     ((Ppat_var ((binder_name atom_expr))) (Ppat_var ((binder_name rest)))))
+    (Pexpr_apply (Pexpr_ident ((var_name parse_atom_expr_with_depth)))
+     ((Pexpr_ident ((var_name tokens))) (Pexpr_ident ((var_name depth)))))
+    (Pexpr_let
+     (Ppat_constraint (Ppat_var ((binder_name base_expr)))
+      (Ptype_name ((lid ApplyExpr)) ()))
+     (Pexpr_record
+      ((Field_def ((label_name kind))
+        (Pexpr_apply
+         (Pexpr_constr
+          ((constr_name ((name AtomExpr)))
+           (extra_info (Type_name ((name ApplyExprKind))))))
+         ((Pexpr_ident ((var_name atom_expr)))))
+        false))
+      Trailing_none)
+     (Pexpr_apply
+      (Pexpr_ident ((var_name parse_apply_expr_suffix_with_depth)))
+      ((Pexpr_ident ((var_name base_expr))) (Pexpr_ident ((var_name rest)))
+       (Pexpr_ident ((var_name depth)))))))))
+ (Ptop_funcdef
+  ((name ((binder_name parse_apply_expr_suffix)))
+   (decl_params
+    (((((binder_name base_expr)) ((Ptype_name ((lid ApplyExpr)) ())))
+      (((binder_name tokens))
+       ((Ptype_name ((lid ArrayView)) ((Ptype_name ((lid Token)) ()))))))))
+   (quantifiers ())
+   (return_type
+    ((Ptype_tuple
+      ((Ptype_name ((lid ApplyExpr)) ())
+       (Ptype_name ((lid ArrayView)) ((Ptype_name ((lid Token)) ())))))))
+   (error_type (Error_typ (Ptype_name ((lid ParseError)) ())))
+   (vis Vis_default)
+   (doc_
+    ((comment (" Helper function to parse array access suffixes"))
+     (loc 17:1-17:51))))
+  (Decl_body
+   (Pexpr_apply (Pexpr_ident ((var_name parse_apply_expr_suffix_with_depth)))
+    ((Pexpr_ident ((var_name base_expr))) (Pexpr_ident ((var_name tokens)))
+     (Pexpr_constant 0)))))
+ (Ptop_funcdef
+  ((name ((binder_name parse_apply_expr_suffix_with_depth)))
+   (decl_params
+    (((((binder_name base_expr)) ((Ptype_name ((lid ApplyExpr)) ())))
+      (((binder_name tokens))
+       ((Ptype_name ((lid ArrayView)) ((Ptype_name ((lid Token)) ())))))
+      (((binder_name depth)) ((Ptype_name ((lid Int)) ()))))))
+   (quantifiers ())
+   (return_type
+    ((Ptype_tuple
+      ((Ptype_name ((lid ApplyExpr)) ())
+       (Ptype_name ((lid ArrayView)) ((Ptype_name ((lid Token)) ())))))))
+   (error_type (Error_typ (Ptype_name ((lid ParseError)) ())))
+   (vis Vis_default)
+   (doc_
+    ((comment
+      (" Helper function to parse array access suffixes with depth tracking"))
+     (loc 25:1-25:71))))
+  (Decl_body
+   (Pexpr_letmut ((binder_name current_expr)) ()
+    (Pexpr_ident ((var_name base_expr)))
+    (Pexpr_letmut ((binder_name remaining_tokens)) ()
+     (Pexpr_ident ((var_name tokens)))
+     (Pexpr_letmut ((binder_name operations_processed)) () (Pexpr_constant 0)
+      (Pexpr_sequence
+       ((Pexpr_while
+         (Pexpr_infix ((var_name &&))
+          (Pexpr_infix ((var_name <))
+           (Pexpr_ident ((var_name operations_processed)))
+           (Pexpr_constant 20))
+          (Pexpr_infix ((var_name >))
+           (Pexpr_dot_apply (Pexpr_ident ((var_name remaining_tokens)))
+            ((label_name length)) ())
+           (Pexpr_constant 0)))
+         (Pexpr_if
+          (Pexpr_infix ((var_name ==))
+           (Pexpr_field
+            (Pexpr_dot_apply (Pexpr_ident ((var_name remaining_tokens)))
+             ((label_name op_get)) ((Pexpr_constant 0)))
+            (Label ((label_name kind))))
+           (Pexpr_apply
+            (Pexpr_constr
+             ((constr_name ((name Bracket)))
+              (extra_info
+               (Type_name ((name @moonbitlang/MiniMoonbit/lexer.TokenKind))))))
+            ((Pexpr_constant [))))
+          (Pexpr_let (Ppat_var ((binder_name after_open)))
+           (Pexpr_array_get_slice (Pexpr_ident ((var_name remaining_tokens)))
+            ((Pexpr_constant 1)) ())
+           (Pexpr_let
+            (Ppat_tuple
+             ((Ppat_var ((binder_name index_expr)))
+              (Ppat_var ((binder_name after_index)))))
+            (Pexpr_apply (Pexpr_ident ((var_name parse_expr_with_depth)))
+             ((Pexpr_ident ((var_name after_open)))
+              (Pexpr_infix ((var_name +)) (Pexpr_ident ((var_name depth)))
+               (Pexpr_constant 1))))
+            (Pexpr_sequence
+             ((Pexpr_if
+               (Pexpr_infix ((var_name ||))
+                (Pexpr_infix ((var_name ==))
+                 (Pexpr_dot_apply (Pexpr_ident ((var_name after_index)))
+                  ((label_name length)) ())
+                 (Pexpr_constant 0))
+                (Pexpr_infix ((var_name !=))
+                 (Pexpr_field
+                  (Pexpr_dot_apply (Pexpr_ident ((var_name after_index)))
+                   ((label_name op_get)) ((Pexpr_constant 0)))
+                  (Label ((label_name kind))))
+                 (Pexpr_apply
+                  (Pexpr_constr
+                   ((constr_name ((name Bracket)))
+                    (extra_info
+                     (Type_name
+                      ((name @moonbitlang/MiniMoonbit/lexer.TokenKind))))))
+                  ((Pexpr_constant ])))))
+               (Pexpr_raise
+                (Pexpr_apply
+                 (Pexpr_constr
+                  ((constr_name ((name ParseError)))
+                   (extra_info No_extra_info)))
+                 ((Pexpr_constant "Expected ']' after array index"))))
+               ())
+              (Pexpr_assign ((var_name current_expr))
+               (Pexpr_record
+                ((Field_def ((label_name kind))
+                  (Pexpr_apply
+                   (Pexpr_constr
+                    ((constr_name ((name ArrayAccess)))
+                     (extra_info (Type_name ((name ApplyExprKind))))))
+                   ((Pexpr_ident ((var_name current_expr)))
+                    (Pexpr_ident ((var_name index_expr)))))
+                  false))
+                Trailing_none))
+              (Pexpr_assign ((var_name remaining_tokens))
+               (Pexpr_array_get_slice (Pexpr_ident ((var_name after_index)))
+                ((Pexpr_constant 1)) ())))
+             (Pexpr_assign ((var_name operations_processed))
+              (Pexpr_infix ((var_name +))
+               (Pexpr_ident ((var_name operations_processed)))
+               (Pexpr_constant 1))))))
+          ((Pexpr_if
+            (Pexpr_infix ((var_name ==))
+             (Pexpr_field
+              (Pexpr_dot_apply (Pexpr_ident ((var_name remaining_tokens)))
+               ((label_name op_get)) ((Pexpr_constant 0)))
+              (Label ((label_name kind))))
+             (Pexpr_apply
+              (Pexpr_constr
+               ((constr_name ((name Bracket)))
+                (extra_info
+                 (Type_name
+                  ((name @moonbitlang/MiniMoonbit/lexer.TokenKind))))))
+              ((Pexpr_constant "("))))
+            (Pexpr_let (Ppat_var ((binder_name after_open)))
+             (Pexpr_array_get_slice
+              (Pexpr_ident ((var_name remaining_tokens)))
+              ((Pexpr_constant 1)) ())
+             (Pexpr_let
+              (Ppat_tuple
+               ((Ppat_var ((binder_name args)))
+                (Ppat_var ((binder_name after_args)))))
+              (Pexpr_apply
+               (Pexpr_ident
+                ((var_name parse_comma_separated_args_with_depth)))
+               ((Pexpr_ident ((var_name after_open)))
+                (Pexpr_infix ((var_name +)) (Pexpr_ident ((var_name depth)))
+                 (Pexpr_constant 1))))
+              (Pexpr_sequence
+               ((Pexpr_if
+                 (Pexpr_infix ((var_name ||))
+                  (Pexpr_infix ((var_name ==))
+                   (Pexpr_dot_apply (Pexpr_ident ((var_name after_args)))
+                    ((label_name length)) ())
+                   (Pexpr_constant 0))
+                  (Pexpr_infix ((var_name !=))
+                   (Pexpr_field
+                    (Pexpr_dot_apply (Pexpr_ident ((var_name after_args)))
+                     ((label_name op_get)) ((Pexpr_constant 0)))
+                    (Label ((label_name kind))))
+                   (Pexpr_apply
+                    (Pexpr_constr
+                     ((constr_name ((name Bracket)))
+                      (extra_info
+                       (Type_name
+                        ((name @moonbitlang/MiniMoonbit/lexer.TokenKind))))))
+                    ((Pexpr_constant ")")))))
+                 (Pexpr_raise
+                  (Pexpr_apply
+                   (Pexpr_constr
+                    ((constr_name ((name ParseError)))
+                     (extra_info No_extra_info)))
+                   ((Pexpr_constant "Expected ')' after function arguments"))))
+                 ())
+                (Pexpr_assign ((var_name current_expr))
+                 (Pexpr_record
+                  ((Field_def ((label_name kind))
+                    (Pexpr_apply
+                     (Pexpr_constr
+                      ((constr_name ((name Call)))
+                       (extra_info (Type_name ((name ApplyExprKind))))))
+                     ((Pexpr_ident ((var_name current_expr)))
+                      (Pexpr_ident ((var_name args)))))
+                    false))
+                  Trailing_none))
+                (Pexpr_assign ((var_name remaining_tokens))
+                 (Pexpr_array_get_slice (Pexpr_ident ((var_name after_args)))
+                  ((Pexpr_constant 1)) ())))
+               (Pexpr_assign ((var_name operations_processed))
+                (Pexpr_infix ((var_name +))
+                 (Pexpr_ident ((var_name operations_processed)))
+                 (Pexpr_constant 1))))))
+            ((Pexpr_if
+              (Pexpr_infix ((var_name ==))
+               (Pexpr_field
+                (Pexpr_dot_apply (Pexpr_ident ((var_name remaining_tokens)))
+                 ((label_name op_get)) ((Pexpr_constant 0)))
+                (Label ((label_name kind))))
+               (Pexpr_apply
+                (Pexpr_constr
+                 ((constr_name ((name Symbol)))
+                  (extra_info
+                   (Type_name
+                    ((name @moonbitlang/MiniMoonbit/lexer.TokenKind))))))
+                ((Pexpr_constant ::))))
+              (Pexpr_let (Ppat_var ((binder_name after_double_colon)))
+               (Pexpr_array_get_slice
+                (Pexpr_ident ((var_name remaining_tokens)))
+                ((Pexpr_constant 1)) ())
+               (Pexpr_sequence
+                ((Pexpr_if
+                  (Pexpr_infix ((var_name ==))
+                   (Pexpr_dot_apply
+                    (Pexpr_ident ((var_name after_double_colon)))
+                    ((label_name length)) ())
+                   (Pexpr_constant 0))
+                  (Pexpr_raise
+                   (Pexpr_apply
+                    (Pexpr_constr
+                     ((constr_name ((name ParseError)))
+                      (extra_info No_extra_info)))
+                    ((Pexpr_constant "Expected enum variant name after '::'"))))
+                  ()))
+                (Pexpr_let (Ppat_var ((binder_name variant_token)))
+                 (Pexpr_dot_apply
+                  (Pexpr_ident ((var_name after_double_colon)))
+                  ((label_name op_get)) ((Pexpr_constant 0)))
+                 (Pexpr_match
+                  (Pexpr_field (Pexpr_ident ((var_name variant_token)))
+                   (Label ((label_name kind))))
+                  (((Ppat_constr
+                     ((constr_name ((name Upper)))
+                      (extra_info
+                       (Type_name
+                        ((name @moonbitlang/MiniMoonbit/lexer.TokenKind)))))
+                     (((Ppat_var ((binder_name variant_name))))))
+                    (Pexpr_sequence
+                     ((Pexpr_assign ((var_name current_expr))
+                       (Pexpr_record
+                        ((Field_def ((label_name kind))
+                          (Pexpr_apply
+                           (Pexpr_constr
+                            ((constr_name ((name EnumVariantAccess)))
+                             (extra_info (Type_name ((name ApplyExprKind))))))
+                           ((Pexpr_ident ((var_name current_expr)))
+                            (Pexpr_ident ((var_name variant_name)))))
+                          false))
+                        Trailing_none))
+                      (Pexpr_assign ((var_name remaining_tokens))
+                       (Pexpr_array_get_slice
+                        (Pexpr_ident ((var_name after_double_colon)))
+                        ((Pexpr_constant 1)) ())))
+                     (Pexpr_assign ((var_name operations_processed))
+                      (Pexpr_infix ((var_name +))
+                       (Pexpr_ident ((var_name operations_processed)))
+                       (Pexpr_constant 1)))))
+                   ((Ppat_any)
+                    (Pexpr_raise
+                     (Pexpr_apply
+                      (Pexpr_constr
+                       ((constr_name ((name ParseError)))
+                        (extra_info No_extra_info)))
+                      ((Pexpr_constant
+                        "Expected uppercase identifier (enum variant) after '::'"))))))))))
+              ((Pexpr_if
+                (Pexpr_infix ((var_name ==))
+                 (Pexpr_field
+                  (Pexpr_dot_apply
+                   (Pexpr_ident ((var_name remaining_tokens)))
+                   ((label_name op_get)) ((Pexpr_constant 0)))
+                  (Label ((label_name kind))))
+                 (Pexpr_apply
+                  (Pexpr_constr
+                   ((constr_name ((name Symbol)))
+                    (extra_info
+                     (Type_name
+                      ((name @moonbitlang/MiniMoonbit/lexer.TokenKind))))))
+                  ((Pexpr_constant .))))
+                (Pexpr_let (Ppat_var ((binder_name after_dot)))
+                 (Pexpr_array_get_slice
+                  (Pexpr_ident ((var_name remaining_tokens)))
+                  ((Pexpr_constant 1)) ())
+                 (Pexpr_sequence
+                  ((Pexpr_if
+                    (Pexpr_infix ((var_name ==))
+                     (Pexpr_dot_apply (Pexpr_ident ((var_name after_dot)))
+                      ((label_name length)) ())
+                     (Pexpr_constant 0))
+                    (Pexpr_raise
+                     (Pexpr_apply
+                      (Pexpr_constr
+                       ((constr_name ((name ParseError)))
+                        (extra_info No_extra_info)))
+                      ((Pexpr_constant "Expected field name after '. '"))))
+                    ()))
+                  (Pexpr_let (Ppat_var ((binder_name field_token)))
+                   (Pexpr_dot_apply (Pexpr_ident ((var_name after_dot)))
+                    ((label_name op_get)) ((Pexpr_constant 0)))
+                   (Pexpr_match
+                    (Pexpr_field (Pexpr_ident ((var_name field_token)))
+                     (Label ((label_name kind))))
+                    (((Ppat_constr
+                       ((constr_name ((name Lower)))
+                        (extra_info
+                         (Type_name
+                          ((name @moonbitlang/MiniMoonbit/lexer.TokenKind)))))
+                       (((Ppat_var ((binder_name field_name))))))
+                      (Pexpr_sequence
+                       ((Pexpr_assign ((var_name current_expr))
+                         (Pexpr_record
+                          ((Field_def ((label_name kind))
+                            (Pexpr_apply
+                             (Pexpr_constr
+                              ((constr_name ((name FieldAccess)))
+                               (extra_info
+                                (Type_name ((name ApplyExprKind))))))
+                             ((Pexpr_ident ((var_name current_expr)))
+                              (Pexpr_ident ((var_name field_name)))))
+                            false))
+                          Trailing_none))
+                        (Pexpr_assign ((var_name remaining_tokens))
+                         (Pexpr_array_get_slice
+                          (Pexpr_ident ((var_name after_dot)))
+                          ((Pexpr_constant 1)) ())))
+                       (Pexpr_assign ((var_name operations_processed))
+                        (Pexpr_infix ((var_name +))
+                         (Pexpr_ident ((var_name operations_processed)))
+                         (Pexpr_constant 1)))))
+                     ((Ppat_any)
+                      (Pexpr_raise
+                       (Pexpr_apply
+                        (Pexpr_constr
+                         ((constr_name ((name ParseError)))
+                          (extra_info No_extra_info)))
+                        ((Pexpr_constant
+                          "Expected field name (lowercase identifier) after '. '"))))))))))
+                ((Pexpr_break)))))))))
+         ()))
+       (Pexpr_tuple
+        ((Pexpr_ident ((var_name current_expr)))
+         (Pexpr_ident ((var_name remaining_tokens)))))))))))
+ (Ptop_funcdef
+  ((name ((binder_name parse_comma_separated_args)))
+   (decl_params
+    (((((binder_name tokens))
+       ((Ptype_name ((lid ArrayView)) ((Ptype_name ((lid Token)) ()))))))))
+   (quantifiers ())
+   (return_type
+    ((Ptype_tuple
+      ((Ptype_name ((lid Array)) ((Ptype_name ((lid Expr)) ())))
+       (Ptype_name ((lid ArrayView)) ((Ptype_name ((lid Token)) ())))))))
+   (error_type (Error_typ (Ptype_name ((lid ParseError)) ())))
+   (vis Vis_default)
+   (doc_
+    ((comment (" Helper function to parse comma-separated expression list"))
+     (loc 132:1-132:61))))
+  (Decl_body
+   (Pexpr_apply
+    (Pexpr_ident ((var_name parse_comma_separated_args_with_depth)))
+    ((Pexpr_ident ((var_name tokens))) (Pexpr_constant 0)))))
+ (Ptop_funcdef
+  ((name ((binder_name parse_comma_separated_args_with_depth)))
+   (decl_params
+    (((((binder_name tokens))
+       ((Ptype_name ((lid ArrayView)) ((Ptype_name ((lid Token)) ())))))
+      (((binder_name depth)) ((Ptype_name ((lid Int)) ()))))))
+   (quantifiers ())
+   (return_type
+    ((Ptype_tuple
+      ((Ptype_name ((lid Array)) ((Ptype_name ((lid Expr)) ())))
+       (Ptype_name ((lid ArrayView)) ((Ptype_name ((lid Token)) ())))))))
+   (error_type (Error_typ (Ptype_name ((lid ParseError)) ())))
+   (vis Vis_default)
+   (doc_
+    ((comment
+      (" Helper function to parse comma-separated expression list with depth tracking"))
+     (loc 139:1-139:81))))
+  (Decl_body
+   (Pexpr_if
+    (Pexpr_infix ((var_name &&))
+     (Pexpr_infix ((var_name >))
+      (Pexpr_dot_apply (Pexpr_ident ((var_name tokens)))
+       ((label_name length)) ())
+      (Pexpr_constant 0))
+     (Pexpr_infix ((var_name ==))
+      (Pexpr_field
+       (Pexpr_dot_apply (Pexpr_ident ((var_name tokens)))
+        ((label_name op_get)) ((Pexpr_constant 0)))
+       (Label ((label_name kind))))
+      (Pexpr_apply
+       (Pexpr_constr
+        ((constr_name ((name Bracket)))
+         (extra_info
+          (Type_name ((name @moonbitlang/MiniMoonbit/lexer.TokenKind))))))
+       ((Pexpr_constant ")")))))
+    (Pexpr_tuple ((Pexpr_array ()) (Pexpr_ident ((var_name tokens)))))
+    ((Pexpr_if
+      (Pexpr_infix ((var_name ==))
+       (Pexpr_dot_apply (Pexpr_ident ((var_name tokens)))
+        ((label_name length)) ())
+       (Pexpr_constant 0))
+      (Pexpr_raise
+       (Pexpr_apply
+        (Pexpr_constr
+         ((constr_name ((name ParseError))) (extra_info No_extra_info)))
+        ((Pexpr_constant
+          "Unexpected end of input while parsing expression list"))))
+      ((Pexpr_apply
+        (Pexpr_ident ((var_name parse_expr_list_limited_with_depth)))
+        ((Pexpr_ident ((var_name tokens))) (Pexpr_constant 0)
+         (Pexpr_ident ((var_name depth)))))))))))
+ (Ptop_funcdef
+  ((name ((binder_name parse_expr_list_limited)))
+   (decl_params
+    (((((binder_name tokens))
+       ((Ptype_name ((lid ArrayView)) ((Ptype_name ((lid Token)) ())))))
+      (((binder_name arg_count)) ((Ptype_name ((lid Int)) ()))))))
+   (quantifiers ())
+   (return_type
+    ((Ptype_tuple
+      ((Ptype_name ((lid Array)) ((Ptype_name ((lid Expr)) ())))
+       (Ptype_name ((lid ArrayView)) ((Ptype_name ((lid Token)) ())))))))
+   (error_type (Error_typ (Ptype_name ((lid ParseError)) ())))
+   (vis Vis_default)
+   (doc_
+    ((comment (" Helper function with argument limit")) (loc 155:1-155:40))))
+  (Decl_body
+   (Pexpr_apply (Pexpr_ident ((var_name parse_expr_list_limited_with_depth)))
+    ((Pexpr_ident ((var_name tokens))) (Pexpr_ident ((var_name arg_count)))
+     (Pexpr_constant 0)))))
+ (Ptop_funcdef
+  ((name ((binder_name parse_expr_list_limited_with_depth)))
+   (decl_params
+    (((((binder_name tokens))
+       ((Ptype_name ((lid ArrayView)) ((Ptype_name ((lid Token)) ())))))
+      (((binder_name arg_count)) ((Ptype_name ((lid Int)) ())))
+      (((binder_name depth)) ((Ptype_name ((lid Int)) ()))))))
+   (quantifiers ())
+   (return_type
+    ((Ptype_tuple
+      ((Ptype_name ((lid Array)) ((Ptype_name ((lid Expr)) ())))
+       (Ptype_name ((lid ArrayView)) ((Ptype_name ((lid Token)) ())))))))
+   (error_type (Error_typ (Ptype_name ((lid ParseError)) ())))
+   (vis Vis_default)
+   (doc_
+    ((comment (" Helper function with argument limit and depth tracking"))
+     (loc 163:1-163:59))))
+  (Decl_body
+   (Pexpr_sequence
+    ((Pexpr_if
+      (Pexpr_infix ((var_name >)) (Pexpr_ident ((var_name arg_count)))
+       (Pexpr_constant 10))
+      (Pexpr_raise
+       (Pexpr_apply
+        (Pexpr_constr
+         ((constr_name ((name ParseError))) (extra_info No_extra_info)))
+        ((Pexpr_constant "Too many function arguments"))))
+      ()))
+    (Pexpr_let
+     (Ppat_tuple
+      ((Ppat_var ((binder_name first_arg)))
+       (Ppat_var ((binder_name after_first)))))
+     (Pexpr_apply (Pexpr_ident ((var_name parse_expr_with_depth)))
+      ((Pexpr_ident ((var_name tokens)))
+       (Pexpr_infix ((var_name +)) (Pexpr_ident ((var_name depth)))
+        (Pexpr_constant 1))))
+     (Pexpr_apply (Pexpr_ident ((var_name parse_expr_list_rest_with_depth)))
+      ((Pexpr_array ((Pexpr_ident ((var_name first_arg)))))
+       (Pexpr_ident ((var_name after_first)))
+       (Pexpr_infix ((var_name +)) (Pexpr_ident ((var_name arg_count)))
+        (Pexpr_constant 1))
+       (Pexpr_ident ((var_name depth)))))))))
+ (Ptop_funcdef
+  ((name ((binder_name parse_expr_list_rest)))
+   (decl_params
+    (((((binder_name args))
+       ((Ptype_name ((lid Array)) ((Ptype_name ((lid Expr)) ())))))
+      (((binder_name tokens))
+       ((Ptype_name ((lid ArrayView)) ((Ptype_name ((lid Token)) ())))))
+      (((binder_name arg_count)) ((Ptype_name ((lid Int)) ()))))))
+   (quantifiers ())
+   (return_type
+    ((Ptype_tuple
+      ((Ptype_name ((lid Array)) ((Ptype_name ((lid Expr)) ())))
+       (Ptype_name ((lid ArrayView)) ((Ptype_name ((lid Token)) ())))))))
+   (error_type (Error_typ (Ptype_name ((lid ParseError)) ())))
+   (vis Vis_default)
+   (doc_
+    ((comment
+      (" Helper function to parse remaining comma-separated expressions"))
+     (loc 180:1-180:67))))
+  (Decl_body
+   (Pexpr_apply (Pexpr_ident ((var_name parse_expr_list_rest_with_depth)))
+    ((Pexpr_ident ((var_name args))) (Pexpr_ident ((var_name tokens)))
+     (Pexpr_ident ((var_name arg_count))) (Pexpr_constant 0)))))
+ (Ptop_funcdef
+  ((name ((binder_name parse_expr_list_rest_with_depth)))
+   (decl_params
+    (((((binder_name args))
+       ((Ptype_name ((lid Array)) ((Ptype_name ((lid Expr)) ())))))
+      (((binder_name tokens))
+       ((Ptype_name ((lid ArrayView)) ((Ptype_name ((lid Token)) ())))))
+      (((binder_name arg_count)) ((Ptype_name ((lid Int)) ())))
+      (((binder_name depth)) ((Ptype_name ((lid Int)) ()))))))
+   (quantifiers ())
+   (return_type
+    ((Ptype_tuple
+      ((Ptype_name ((lid Array)) ((Ptype_name ((lid Expr)) ())))
+       (Ptype_name ((lid ArrayView)) ((Ptype_name ((lid Token)) ())))))))
+   (error_type (Error_typ (Ptype_name ((lid ParseError)) ())))
+   (vis Vis_default)
+   (doc_
+    ((comment
+      (" Helper function to parse remaining comma-separated expressions with depth tracking"))
+     (loc 189:1-189:87))))
+  (Decl_body
+   (Pexpr_sequence
+    ((Pexpr_if
+      (Pexpr_infix ((var_name >)) (Pexpr_ident ((var_name arg_count)))
+       (Pexpr_constant 10))
+      (Pexpr_raise
+       (Pexpr_apply
+        (Pexpr_constr
+         ((constr_name ((name ParseError))) (extra_info No_extra_info)))
+        ((Pexpr_constant "Too many function arguments"))))
+      ()))
+    (Pexpr_if
+     (Pexpr_infix ((var_name &&))
+      (Pexpr_infix ((var_name >))
+       (Pexpr_dot_apply (Pexpr_ident ((var_name tokens)))
+        ((label_name length)) ())
+       (Pexpr_constant 0))
+      (Pexpr_infix ((var_name ==))
+       (Pexpr_field
+        (Pexpr_dot_apply (Pexpr_ident ((var_name tokens)))
+         ((label_name op_get)) ((Pexpr_constant 0)))
+        (Label ((label_name kind))))
+       (Pexpr_apply
+        (Pexpr_constr
+         ((constr_name ((name Symbol)))
+          (extra_info
+           (Type_name ((name @moonbitlang/MiniMoonbit/lexer.TokenKind))))))
+        ((Pexpr_constant ,)))))
+     (Pexpr_let (Ppat_var ((binder_name after_comma)))
+      (Pexpr_array_get_slice (Pexpr_ident ((var_name tokens)))
+       ((Pexpr_constant 1)) ())
+      (Pexpr_if
+       (Pexpr_infix ((var_name &&))
+        (Pexpr_infix ((var_name >))
+         (Pexpr_dot_apply (Pexpr_ident ((var_name after_comma)))
+          ((label_name length)) ())
+         (Pexpr_constant 0))
+        (Pexpr_infix ((var_name ==))
+         (Pexpr_field
+          (Pexpr_dot_apply (Pexpr_ident ((var_name after_comma)))
+           ((label_name op_get)) ((Pexpr_constant 0)))
+          (Label ((label_name kind))))
+         (Pexpr_apply
+          (Pexpr_constr
+           ((constr_name ((name Bracket)))
+            (extra_info
+             (Type_name ((name @moonbitlang/MiniMoonbit/lexer.TokenKind))))))
+          ((Pexpr_constant ")")))))
+       (Pexpr_tuple
+        ((Pexpr_ident ((var_name args)))
+         (Pexpr_ident ((var_name after_comma)))))
+       ((Pexpr_if
+         (Pexpr_infix ((var_name ==))
+          (Pexpr_dot_apply (Pexpr_ident ((var_name after_comma)))
+           ((label_name length)) ())
+          (Pexpr_constant 0))
+         (Pexpr_raise
+          (Pexpr_apply
+           (Pexpr_constr
+            ((constr_name ((name ParseError))) (extra_info No_extra_info)))
+           ((Pexpr_constant
+             "Unexpected end of input after comma in expression list"))))
+         ((Pexpr_let
+           (Ppat_tuple
+            ((Ppat_var ((binder_name next_arg)))
+             (Ppat_var ((binder_name after_next)))))
+           (Pexpr_apply (Pexpr_ident ((var_name parse_expr_with_depth)))
+            ((Pexpr_ident ((var_name after_comma)))
+             (Pexpr_infix ((var_name +)) (Pexpr_ident ((var_name depth)))
+              (Pexpr_constant 1))))
+           (Pexpr_apply
+            (Pexpr_ident ((var_name parse_expr_list_rest_with_depth)))
+            ((Pexpr_infix ((var_name +)) (Pexpr_ident ((var_name args)))
+              (Pexpr_array ((Pexpr_ident ((var_name next_arg))))))
+             (Pexpr_ident ((var_name after_next)))
+             (Pexpr_infix ((var_name +)) (Pexpr_ident ((var_name arg_count)))
+              (Pexpr_constant 1))
+             (Pexpr_ident ((var_name depth)))))))))))
+     ((Pexpr_tuple
+       ((Pexpr_ident ((var_name args))) (Pexpr_ident ((var_name tokens)))))))))))

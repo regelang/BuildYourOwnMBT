@@ -87,5 +87,4 @@ test "Program TypeCheck Test" {
   let tokens = @lexer.tokenize(code)
   let program = @parser.parse(tokens)
   let _ = ctx.check_program(program)
-
 }

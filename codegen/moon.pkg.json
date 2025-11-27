@@ -1,7 +1,6 @@
 {
   "import": [
     "moonbitlang/MiniMoonbit/knf",
-    "Kaida-Amethyst/either",
     {
       "path" : "Kaida-Amethyst/MoonLLVM/IR",
       "alias" : "llvm"

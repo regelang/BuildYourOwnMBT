@@ -17,9 +17,29 @@ pub fn Context::stmt_to_knf(
   self : Context,
   stmt : @typecheck.Stmt,
 ) -> Array[KnfStmt] raise KnfTransformError {
-  ignore(self)
-  ignore(stmt)
-  raise KnfTransformError("stmt_to_knf not implemented")
+  match stmt.kind {
+    @typecheck.StmtKind::LetStmt(let_stmt) => self.let_stmt_to_knf(let_stmt)
+    @typecheck.StmtKind::LetMutStmt(let_mut_stmt) => self.let_mut_stmt_to_knf(let_mut_stmt)
+    @typecheck.StmtKind::AssignStmt(assign_stmt) => self.assign_stmt_to_knf(assign_stmt)
+    @typecheck.StmtKind::ExprStmt(expr) => {
+      let (expr_stmts, knf_expr) = self.expr_to_knf(expr)
+      expr_stmts + [ExprStmt(knf_expr)]
+    }
+    @typecheck.StmtKind::ReturnStmt(expr_opt) => {
+      match expr_opt {
+        Some(expr) => {
+          let (expr_stmts, knf_expr) = self.expr_to_knf(expr)
+          expr_stmts + [Return(knf_expr)]
+        }
+        None => [ReturnUnit]
+      }
+    }
+    @typecheck.StmtKind::WhileStmt(while_stmt) => self.while_stmt_to_knf(while_stmt)
+    @typecheck.StmtKind::LocalFunction(local_func) => {
+      let closure = self.local_function_to_knf(local_func)
+      [ClosureDef(closure)]
+    }
+  }
 }
 
 ///|

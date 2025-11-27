@@ -1,3 +1,4 @@
+
 /// ================================================================================
 /// # 🎉 终章：完成类型检查器
 ///
@@ -83,9 +84,11 @@ test "Program TypeCheck Test" {
     #|  let max_min_diff = maximum - minimum;
     #|  print_int(max_min_diff);
     #|}
+
   let tokens = @lexer.tokenize(code)
   let program = @parser.parse(tokens)
   let program = typecheck(program)
+
   let program_str = program.to_string()
   assert_false(program_str.contains("TypeVar"))
 }
